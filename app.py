@@ -28,6 +28,7 @@ from utils.query_engine import (
     generate_kpi_queries,
     execute_kpi_queries
 )
+from utils.metrics import render_kpi_cards
 
 # =============================
 # SESSION STATE
@@ -69,17 +70,14 @@ genai.configure(
 # =============================
 
 st.set_page_config(
-    page_title="Smart ETL Data Cleaner",
+    page_title="📊 InsightFlow AI - Smart Data Analytics",
     layout="wide"
 )
 
 st.title(
-    "📊 Smart ETL Data Cleaner"
+    "📊 InsightFlow AI - Smart Data Analytics"
 )
 
-st.write(
-    "Upload a CSV or Excel file for data analysis."
-)
 
 
 # =============================
@@ -87,7 +85,7 @@ st.write(
 # =============================
 
 uploaded_file = st.file_uploader(
-    "Upload CSV or Excel File",
+    "Upload a CSV or Excel file for data analysis.",
     type=["csv", "xlsx"]
 )
 
@@ -204,6 +202,7 @@ if uploaded_file is not None:
                 "Poor Data Quality ❌"
             )
 
+        st.divider()
 
         # =============================
         # TRANSFORMATION SECTION
@@ -368,19 +367,23 @@ if uploaded_file is not None:
             mime="text/csv"
         )
 
-
+        st.divider()
+        
         # =============================
         # AI DATASET ANALYSIS
         # =============================
 
+        st.header("🤖 AI Analytics Suite", text_alignment="center")
+
+        st.divider()
+
+        
         st.header(
-            "🤖 AI Dataset Analysis"
+            "🤖 🔍 Dataset Analysis"
         )
 
-        st.write(
-            "Analyze the dataset structure and "
-            "automatically discover relevant KPIs."
-        )
+        st.caption("Discover your dataset, generate metadata, identify business KPIs, and build a profile."
+)
 
 
         if st.button(
@@ -476,7 +479,8 @@ if uploaded_file is not None:
                 st.error(
                     f"AI Analysis Error: {e}"
                 )
-
+                
+        st.divider()
 
         # =============================
         # DEVELOPER DETAILS
@@ -517,18 +521,84 @@ if uploaded_file is not None:
                     st.session_state.dynamic_kpis
                 )
 
+        # ======================================
+        # Key Business Metrics
+        # ======================================
 
+        if st.session_state.get("dynamic_kpis"):
+
+            st.subheader("📊 Key Business Metrics")
+
+            render_kpi_cards(
+                st.session_state.dynamic_kpis
+            )
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+    
+
+        # =============================
+        # EXECUTIVE SUMMARY
+        # =============================
+
+        st.header(
+            "📄 Executive Summary"
+        )
+
+        st.caption("Generate an executive-ready summary highlighting key business insights.")
+        
+        if st.button(
+            "Generate Executive Summary",
+            key="executive_summary"
+        ):
+
+            if (
+                st.session_state.dynamic_kpis
+                is None
+            ):
+
+                st.warning(
+                    "Please click 'Analyze Dataset' first "
+                    "to discover and calculate relevant KPIs."
+                )
+
+            else:
+
+                with st.spinner(
+                    "Generating executive summary..."
+                ):
+
+                    try:
+
+                        summary = (
+                            generate_executive_summary(
+                                metadata,
+                                st.session_state.dataset_profile,
+                                st.session_state.dynamic_kpis
+                            )
+                        )
+
+                        st.markdown(
+                            summary
+                        )
+
+                    except Exception as e:
+
+                        st.error(
+                            f"Executive Summary Error: {e}"
+                        )
+
+        st.divider()
+        
+        
         # =============================
         # AI DATA ANALYST
         # =============================
 
         st.header(
-            "🤖 AI Data Analyst"
+            "🤖 💬 AI Data Assistant"
         )
 
-        st.subheader(
-            "📊 Ask Questions About Your Data"
-        )
+        st.caption("Ask questions about your dataset in natural language.")
 
         analytics_question = st.text_input(
             "Ask a business question"
@@ -610,64 +680,15 @@ if uploaded_file is not None:
                         st.error(
                             f"Analysis Error: {e}"
                         )
+        st.divider()
 
-
-        # =============================
-        # EXECUTIVE SUMMARY
-        # =============================
-
-        st.header(
-            "📄 Executive Summary"
-        )
-
-        if st.button(
-            "Generate Executive Summary",
-            key="executive_summary"
-        ):
-
-            if (
-                st.session_state.dynamic_kpis
-                is None
-            ):
-
-                st.warning(
-                    "Please click 'Analyze Dataset' first "
-                    "to discover and calculate relevant KPIs."
-                )
-
-            else:
-
-                with st.spinner(
-                    "Generating executive summary..."
-                ):
-
-                    try:
-
-                        summary = (
-                            generate_executive_summary(
-                                metadata,
-                                st.session_state.dataset_profile,
-                                st.session_state.dynamic_kpis
-                            )
-                        )
-
-                        st.markdown(
-                            summary
-                        )
-
-                    except Exception as e:
-
-                        st.error(
-                            f"Executive Summary Error: {e}"
-                        )
-
-
+        
         # =============================
         # AI GENERATED DASHBOARD
         # =============================
 
         st.header(
-            "📈 AI Dashboard"
+            "📈 Data Visualization Dashboard"
         )
 
 
@@ -718,6 +739,8 @@ if uploaded_file is not None:
             st.header(
                 "🎛️ Dashboard Filters"
             )
+            
+            st.caption("Generate AI-powered visualizations from your dataset.")
 
             categorical_cols = (
                 transformed_df
@@ -784,9 +807,11 @@ if uploaded_file is not None:
                 filtered_df
             )
 
+            st.divider()
 
     except Exception as e:
 
         st.error(
             f"Error processing file: {e}"
         )
+    
