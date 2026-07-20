@@ -655,22 +655,15 @@ Implemented features:
 
 ## Planned Improvements
 
-Future improvements include:
+Future enhancements include:
 
-- Unified `Analyze My Data` workflow
-- Dynamic KPI cards
-- Fully KPI-grounded executive insights
-- Cached natural language analytical questions
-- Improved AI API quota handling
-- AI request retry and error management
-- Abstract Syntax Tree based query validation
-- Stronger generated expression security
-- Improved dashboard visualization selection
-- Additional chart types
-- Improved application navigation
-- Enhanced UI and analytics presentation
-- Migration to the current Google Gen AI Python SDK
-- Deployment-ready configuration
+- AST-based query validation
+- Improved AI API retry and quota handling
+- Additional visualization types
+- Export executive summary as PDF
+- Save analysis history
+- Multi-dataset comparison
+- Migration to the latest Google Gen AI SDK
 
 ---
 
