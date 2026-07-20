@@ -8,6 +8,10 @@ Rather than relying on a fixed dataset structure or a single business domain, In
 
 ---
 
+🚀 Live Demo: https://insightflow-ai-data-analytics.streamlit.app/
+
+---
+
 ## Overview
 
 Traditional data analysis often requires several manual steps:
